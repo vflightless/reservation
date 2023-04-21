@@ -9,11 +9,10 @@ import java.net.URLEncoder;
 
 
 public class Query {
-    public static void test() {
-        System.out.println("uh oh");
+    public static void login() {
         try {
             // Set up the POST request
-            URL url = new URL("http://155.248.226.28/script.php");
+            URL url = new URL("http://155.248.226.28/login.php");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
@@ -34,5 +33,7 @@ public class Query {
             e.printStackTrace();
         }
     }
+
+
 }
 
