@@ -92,7 +92,10 @@ public class Login {
             reader.close();
 
             // Print the response
-            System.out.println("POST Response: " + response);
+            System.out.println(response);
+            if(!response.equalsIgnoreCase("Failed")) {
+                success = true;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
