@@ -10,9 +10,9 @@ public class Dashboard {
         JPanel container = new JPanel(new BorderLayout());
 
         // Content
-        JLabel apptLabel = new JLabel("Appointments");
-        JPanel apptContainer = new JPanel(new FlowLayout());
-        apptContainer.setMinimumSize(new Dimension(100, 300));
+        JLabel appointmentLabel = new JLabel("Appointments");
+        JPanel appointmentWrapper = new JPanel(new FlowLayout());
+        appointmentWrapper.setMinimumSize(new Dimension(100, 300));
 
         // Add components to GridBagLayout panel
         JPanel gridBagPanel = new JPanel(new GridBagLayout());
@@ -21,9 +21,9 @@ public class Dashboard {
         gbc.gridy = 0;
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.NORTH;
-        gridBagPanel.add(apptLabel, gbc);
+        gridBagPanel.add(appointmentLabel, gbc);
         gbc.gridy++;
-        gridBagPanel.add(apptContainer, gbc);
+        gridBagPanel.add(appointmentWrapper, gbc);
 
         // Add the GridBagLayout panel to the center of the BorderLayout
         container.add(addToolbar(), BorderLayout.NORTH);
@@ -52,6 +52,8 @@ public class Dashboard {
         return toolbar;
     }
 
-    //public boolean queryAppointments() {}
+    public void queryAppointments() {
+        
+    }
 
 }

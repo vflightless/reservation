@@ -2,13 +2,13 @@ import java.awt.*;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-
 public class App {
     private JFrame frame;
     private JPanel contentPane;
     private CardLayout cardLayout;
     private JPanel loginPanel;
     private JPanel dashboardPanel;
+    private JPanel createPanel;
 
     public App() {
         // create the frame
@@ -24,10 +24,12 @@ public class App {
 
         loginPanel = Login.newLogin(this);// Login Panel
         dashboardPanel = Dashboard.newDashboard(this);
+        createPanel = new CreateAccount(this);
 
         // Add the panels to the content pane
         contentPane.add(loginPanel, "login");
         contentPane.add(dashboardPanel, "dashboard");
+        contentPane.add(createPanel, "create");
 
         frame.setContentPane(contentPane);// Add content pane to the frame
         cardLayout.show(contentPane, "login");// show the login by default
@@ -37,12 +39,9 @@ public class App {
         frame.setVisible(true);
     }
 
-    public void showLogin() {
-        cardLayout.show(contentPane, "login");
-    }
-    public void showDashboard() {
-        cardLayout.show(contentPane, "dashboard");
-    }
+    public void showLogin() { cardLayout.show(contentPane, "login"); }
+    public void showDashboard() { cardLayout.show(contentPane, "dashboard"); }
+    public void showCreate() { cardLayout.show(contentPane, "create"); }
 
 
     public static void main(String[] args) {
