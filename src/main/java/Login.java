@@ -46,18 +46,17 @@ public class Login {
         loginBtn.addActionListener(e -> {
             Login.queryLogin(app, usernameField, passwordField, errorLabel);
         });
-        createBtn.addActionListener(e -> {
-            app.showCreate();
-        });
 
 
-        // Layout
+        // Layout Manager
         container.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.CENTER;
+
+        // Add the panels to the layout
         container.add(usernamePanel, gbc);
         gbc.gridy++;
         container.add(passwordPanel, gbc);
@@ -92,11 +91,11 @@ public class Login {
             String response = reader.readLine();
             reader.close();
 
-            if(response != "Failed") { success = true; }
-
             // Print the response
-            System.out.println("POST Response: " + response);
             System.out.println(response);
+            if(!response.equalsIgnoreCase("Failed")) {
+                success = true;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
