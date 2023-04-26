@@ -46,7 +46,9 @@ public class Login {
         loginBtn.addActionListener(e -> {
             Login.queryLogin(app, usernameField, passwordField, errorLabel);
         });
-
+        createBtn.addActionListener(e -> {
+            app.showCreate();
+        });
 
         // Layout Manager
         container.setLayout(new GridBagLayout());
