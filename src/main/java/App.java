@@ -8,7 +8,10 @@ public class App {
     private CardLayout cardLayout;
     private JPanel loginPanel;
     private JPanel dashboardPanel;
-    private JPanel createPanel;
+    private JPanel createAccountPanel;
+    private JPanel createAppointmentPanel;
+
+    private String username;
 
     public App() {
         // create the frame
@@ -24,12 +27,14 @@ public class App {
 
         loginPanel = Login.newLogin(this);// Login Panel
         dashboardPanel = Dashboard.newDashboard(this);
-        createPanel = new CreateAccount(this);
+        createAccountPanel = new Account(this);
+        createAppointmentPanel = new Appointment(this);
 
         // Add the panels to the content pane
         contentPane.add(loginPanel, "login");
         contentPane.add(dashboardPanel, "dashboard");
-        contentPane.add(createPanel, "create");
+        contentPane.add(createAccountPanel, "createAccount");
+        contentPane.add(createAppointmentPanel, "createAppointment");
 
         frame.setContentPane(contentPane);// Add content pane to the frame
         cardLayout.show(contentPane, "login");// show the login by default
@@ -41,13 +46,14 @@ public class App {
 
     public void showLogin() { cardLayout.show(contentPane, "login"); }
     public void showDashboard() { cardLayout.show(contentPane, "dashboard"); }
-    public void showCreate() { cardLayout.show(contentPane, "create"); }
+    public void showCreateAccount() { cardLayout.show(contentPane, "createAccount"); }
+    public void showCreateAppointment() { cardLayout.show(contentPane, "createAppointment"); }
 
+    public void setUsername(String u) { username = u; }
+    public String getUsername() { return username; }
 
     public static void main(String[] args) {
         App app = new App();
         app.showLogin(); //default login
-
-
     }
 }

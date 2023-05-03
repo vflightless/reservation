@@ -47,7 +47,7 @@ public class Login {
             Login.queryLogin(app, usernameField, passwordField, errorLabel);
         });
         createBtn.addActionListener(e -> {
-            app.showCreate();
+            app.showCreateAccount();
         });
 
         // Layout Manager
@@ -104,6 +104,7 @@ public class Login {
 
         // Logic
         if (success) {// if true - show dashboard
+            app.setUsername(username);
             app.showDashboard();
         } else { // fail login
             errorLabel.setText("Invalid username or password.");

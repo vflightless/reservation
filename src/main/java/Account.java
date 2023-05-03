@@ -6,7 +6,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class CreateAccount extends JPanel {
+public class Account extends JPanel {
     private JLabel nameLabel;
     private JLabel emailLabel;
     private JLabel passwordLabel;
@@ -17,7 +17,7 @@ public class CreateAccount extends JPanel {
     private JTextField regCodeField;
     private JButton createButton;
 
-    public CreateAccount(App app) {
+    public Account(App app) {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
