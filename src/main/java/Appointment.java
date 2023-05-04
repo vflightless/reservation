@@ -7,6 +7,7 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -68,13 +69,44 @@ public class Appointment extends JPanel {
         gbc.gridy++;
         createAppointmentButton = new JButton("Submit");
         createAppointmentButton.addActionListener(e -> {
-            String result = queryCreateAppointment(app, doctorPicker, datePicker, timePicker, reasonField);
-            System.out.println("Create appointment results: " + result);
+            String result = queryCreateAppointment(app, doctorPicker, datePicker, timePicker, reasonField.getText());
         });
         add(createAppointmentButton, gbc);
     }
-    public String queryCreateAppointment(App app, JComboBox<String> doctor, DatePicker date, JComboBox<String> time, JTextArea reasonField) {
-        return "oops";
+    public String queryCreateAppointment(App app, JComboBox<String> doctor, DatePicker date, JComboBox<String> time, String reason) {
+        String doc = (String) doctor.getSelectedItem();
+        String d = date.getDateStringOrEmptyString();
+        String t = (String) time.getSelectedItem();
+        String r = reasonField.getText();
+        try {
+            // Set up the POST request
+            URL url = new URL("http://155.248.226.28/createAppointment.php");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+
+            // Send the username and password in the request body
+            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+            writer.write("userID=" + app.getUserID() + "&name=" + app.getUsername() + "&doctor=" + doc + "&date=" + d + "&time=" + t + "&reason=" + reason);
+            writer.flush();
+
+            // Read the response from the server
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String response = reader.readLine();
+            reader.close();
+
+            // handle response
+            if(response.equals(null)) {
+                System.out.println("failed");
+            } else {
+                app.showDashboard();
+            }
+            System.out.println("create appointment response: " + response);
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "oops";
+        }
     }
     public String[] queryDoctors() {
         try {
@@ -84,14 +116,10 @@ public class Appointment extends JPanel {
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
 
-
             // Read the response from the server
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String response = reader.readLine();
             reader.close();
-
-            // Print the response
-            System.out.println("get doc query: " + response);
 
             if(!response.equals(null)) {
                 Type listType = new TypeToken<List<String>>() {}.getType();
@@ -100,7 +128,6 @@ public class Appointment extends JPanel {
 
                 int i = 0;
                 for (String row : rows) {
-                    System.out.println(row);
                     drArray[i] = row;
                     i++;
                 }
@@ -109,6 +136,7 @@ public class Appointment extends JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         System.out.println("NULL");
         String[] none = {"null"};
         return none;

@@ -71,7 +71,6 @@ public class Login {
     }
 
     public static void queryLogin(App app, JTextField usernameField, JPasswordField passwordField, JLabel errorLabel) {
-        boolean  success = false; // Replace with actual login validation
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
         System.out.println("Login: " + username + ", " + password);
@@ -93,24 +92,25 @@ public class Login {
             String response = reader.readLine();
             reader.close();
 
-            // Print the response
-            System.out.println(response);
-            if(!response.equalsIgnoreCase("Failed")) {
-                success = true;
+            // Handle Response
+            System.out.println("Login: " + response);
+
+            if(response.equals("Failed")) {
+                errorLabel.setText("Invalid username or password.");
+                errorLabel.setVisible(true);
+                usernameField.setText("");
+                passwordField.setText("");
+            } else {
+                int comma = response.indexOf(", ");
+                if (comma != -1) {
+                    String num = response.substring(comma + 2);
+                    app.setUserID(Integer.parseInt(num));
+                }
+                app.setUsername(username);
+                app.showDashboard();
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-
-        // Logic
-        if (success) {// if true - show dashboard
-            app.setUsername(username);
-            app.showDashboard();
-        } else { // fail login
-            errorLabel.setText("Invalid username or password.");
-            errorLabel.setVisible(true);
-            usernameField.setText("");
-            passwordField.setText("");
         }
     }
 }

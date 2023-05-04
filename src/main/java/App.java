@@ -12,6 +12,7 @@ public class App {
     private JPanel createAppointmentPanel;
 
     private String username;
+    private int userID;
 
     public App() {
         // create the frame
@@ -25,8 +26,8 @@ public class App {
         contentPane.setLayout(cardLayout);
 
 
-        loginPanel = Login.newLogin(this);// Login Panel
-        dashboardPanel = Dashboard.newDashboard(this);
+        loginPanel = Login.newLogin(this);
+        dashboardPanel = new Dashboard(this);
         createAccountPanel = new Account(this);
         createAppointmentPanel = new Appointment(this);
 
@@ -45,15 +46,23 @@ public class App {
     }
 
     public void showLogin() { cardLayout.show(contentPane, "login"); }
-    public void showDashboard() { cardLayout.show(contentPane, "dashboard"); }
+    public void showDashboard() { cardLayout.show(contentPane, "dashboard"); ((Dashboard)dashboardPanel).queryAppointments(this);  }
     public void showCreateAccount() { cardLayout.show(contentPane, "createAccount"); }
     public void showCreateAppointment() { cardLayout.show(contentPane, "createAppointment"); }
 
     public void setUsername(String u) { username = u; }
     public String getUsername() { return username; }
-
+    public void setUserID(int id) { userID = id; }
+    public int getUserID() { return userID; }
     public static void main(String[] args) {
         App app = new App();
-        app.showLogin(); //default login
+        //app.showLogin(); //default login
+
+        //testing
+        /*
+        app.setUsername("test");
+        app.setUserID(11);
+        app.showCreateAppointment();
+         */
     }
 }

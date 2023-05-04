@@ -1,3 +1,5 @@
+import com.google.gson.Gson;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
@@ -6,18 +8,16 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class Dashboard {
-    public static JPanel newDashboard(App app) {
-        JPanel container = new JPanel(new BorderLayout());
+public class Dashboard extends JPanel {
+    private JPanel appointmentWrapper;
+    public Dashboard(App app) {
+        setLayout(new BorderLayout());
 
         // Content
         JLabel appointmentLabel = new JLabel("Appointments");
         JButton createAppointment = new JButton("Create Appointment");
-        JPanel appointmentWrapper = new JPanel(new FlowLayout());
+        appointmentWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
         appointmentWrapper.setMinimumSize(new Dimension(100, 300));
-
-        //call query for upcoming appointments
-        queryAppointments(app, appointmentWrapper);
 
         //create listener
         createAppointment.addActionListener(e -> {
@@ -42,13 +42,11 @@ public class Dashboard {
         gridBagPanel.add(appointmentWrapper, gbc);
 
         // Add the GridBagLayout panel to the center of the BorderLayout
-        container.add(addToolbar(), BorderLayout.NORTH);
-        container.add(gridBagPanel, BorderLayout.CENTER);
-
-        return container;
+        add(addToolbar(), BorderLayout.NORTH);
+        add(gridBagPanel, BorderLayout.CENTER);
     }
 
-    public static JToolBar addToolbar() {
+    public JToolBar addToolbar() {
         JToolBar toolbar = new JToolBar();
         toolbar.setFloatable(false);
 
@@ -68,8 +66,7 @@ public class Dashboard {
         return toolbar;
     }
 
-    public static void queryAppointments(App app, JPanel wrapper) {
-        boolean success = false;
+    public void queryAppointments(App app) {
         try {
             // Set up the POST request
             URL url = new URL("http://155.248.226.28/getAppointment.php");
@@ -77,9 +74,9 @@ public class Dashboard {
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
 
-            // Send the username and password in the request body
+            // query based on user id
             OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-            writer.write("username=" + app.getUsername() );
+            writer.write("userID=" + app.getUserID() );
             writer.flush();
 
             // Read the response from the server
@@ -88,20 +85,34 @@ public class Dashboard {
             reader.close();
 
             // Print the response
-            System.out.println(response);
-            if(!response.equals("Failed")) {
-                success = true;
+            System.out.println("dashboard: " + response);
+            if(response.equals("Failed")) {
+                JLabel none = new JLabel("No upcoming appointments");
+                appointmentWrapper.add(none);
+            } else {
+                System.out.println("query appointment response: " + response);
+                Gson gson = new Gson();
+                Appt[] appts  = gson.fromJson(response, Appt[].class);
+
+                for(int i = 0; i < appts.length; i++) {
+                    JPanel appointment = new JPanel(new GridBagLayout());
+                    GridBagConstraints gbc = new GridBagConstraints();
+
+                    gbc.gridy = 0;
+                    gbc.gridx = 0;
+                    appointment.add(new JLabel(appts[i].getDate()));
+
+                    gbc.gridy++;
+                    appointment.add(new JLabel(appts[i].getTime()));
+
+
+
+                    appointmentWrapper.add(appointment);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        if(success) {
-            //turn successful response into array to loop through
-
-        } else {
-            JLabel none = new JLabel("No upcoming appointments");
-            wrapper.add(none);
-        }
     }
 }
+
