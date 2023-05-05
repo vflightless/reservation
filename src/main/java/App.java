@@ -17,7 +17,7 @@ public class App {
     public App() {
         // create the frame
         frame = new JFrame("CGJ Hospital");
-        frame.setMinimumSize(new Dimension(300, 400));
+        frame.setMinimumSize(new Dimension(800, 600));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // create the content pane and card layout

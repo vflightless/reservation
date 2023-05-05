@@ -17,6 +17,7 @@ public class Appointment extends JPanel {
     private JLabel dateLabel;
     private JLabel timeLabel;
     private JLabel reasonLabel;
+    private JLabel failLabel;
     private JComboBox<String> doctorPicker;
     private DatePicker datePicker;
     private JComboBox<String> timePicker;
@@ -72,6 +73,13 @@ public class Appointment extends JPanel {
             String result = queryCreateAppointment(app, doctorPicker, datePicker, timePicker, reasonField.getText());
         });
         add(createAppointmentButton, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        failLabel = new JLabel("Error when creating appointment. Please try a different date/time.");
+        failLabel.setVisible(false);
+        gbc.gridwidth = 2;
+        add(failLabel, gbc);
     }
     public String queryCreateAppointment(App app, JComboBox<String> doctor, DatePicker date, JComboBox<String> time, String reason) {
         String doc = (String) doctor.getSelectedItem();
@@ -97,10 +105,12 @@ public class Appointment extends JPanel {
 
             // handle response
             System.out.println("create appointment response: " + response);
-            if(response.equals(null)) {
+            if(response.equals("Failed")) {
                 System.out.println("failed");
                 // todo - add failed label
+                failLabel.setVisible(true);
             } else {
+                failLabel.setVisible(false);
                 app.showDashboard();
             }
 
