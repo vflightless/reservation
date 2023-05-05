@@ -107,6 +107,10 @@ public class Login {
                     app.setUserID(Integer.parseInt(num));
                 }
                 app.setUsername(username);
+
+                usernameField.setText("");
+                passwordField.setText("");
+
                 app.showDashboard();
             }
         } catch (Exception e) {

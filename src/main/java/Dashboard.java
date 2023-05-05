@@ -9,44 +9,33 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class Dashboard extends JPanel {
-    private JPanel appointmentWrapper;
+    private JScrollPane appointmentPane;
     public Dashboard(App app) {
         setLayout(new BorderLayout());
 
+        JPanel contentPane = new JPanel();
+        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+
         // Content
         JLabel appointmentLabel = new JLabel("Appointments");
+        appointmentPane = new JScrollPane();
         JButton createAppointment = new JButton("Create Appointment");
-        appointmentWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        appointmentWrapper.setMinimumSize(new Dimension(100, 300));
 
         //create listener
         createAppointment.addActionListener(e -> {
             app.showCreateAppointment();
         });
 
-
-        // Add components to GridBagLayout panel
-        JPanel gridBagPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.anchor = GridBagConstraints.NORTH;
-        gridBagPanel.add(appointmentLabel, gbc);
-
-        gbc.gridx++;
-        gridBagPanel.add(createAppointment,gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy++;
-        gridBagPanel.add(appointmentWrapper, gbc);
+        contentPane.add(appointmentLabel);
+        contentPane.add(appointmentPane);
+        contentPane.add(createAppointment);
 
         // Add the GridBagLayout panel to the center of the BorderLayout
-        add(addToolbar(), BorderLayout.NORTH);
-        add(gridBagPanel, BorderLayout.CENTER);
+        add(addToolbar(app), BorderLayout.NORTH);
+        add(contentPane, BorderLayout.CENTER);
     }
 
-    public JToolBar addToolbar() {
+    public JToolBar addToolbar(App app) {
         JToolBar toolbar = new JToolBar();
         toolbar.setFloatable(false);
 
@@ -56,7 +45,12 @@ public class Dashboard extends JPanel {
 
         // Toolbar Right
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        rightPanel.add(new JButton("Logout"));
+        JButton logoutBtn = new JButton("Logout");
+        rightPanel.add(logoutBtn);
+
+        logoutBtn.addActionListener(e -> {
+            app.showLogin();
+        });
 
         // Add the nested panels to the toolbar
         toolbar.add(leftPanel);
@@ -86,29 +80,28 @@ public class Dashboard extends JPanel {
 
             // Print the response
             System.out.println("dashboard: " + response);
+
             if(response.equals("Failed")) {
                 JLabel none = new JLabel("No upcoming appointments");
-                appointmentWrapper.add(none);
-            } else {
-                System.out.println("query appointment response: " + response);
+                appointmentPane.add(none);
+            } else { // loop appointments and add to appointment pane
                 Gson gson = new Gson();
-                Appt[] appts  = gson.fromJson(response, Appt[].class);
+                Appt[] appts = gson.fromJson(response, Appt[].class);
 
-                for(int i = 0; i < appts.length; i++) {
-                    JPanel appointment = new JPanel(new GridBagLayout());
-                    GridBagConstraints gbc = new GridBagConstraints();
+                JPanel innerPanel = new JPanel();
+                innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.Y_AXIS));
 
-                    gbc.gridy = 0;
-                    gbc.gridx = 0;
-                    appointment.add(new JLabel(appts[i].getDate()));
-
-                    gbc.gridy++;
-                    appointment.add(new JLabel(appts[i].getTime()));
-
-
-
-                    appointmentWrapper.add(appointment);
+                for (int i = 0; i < appts.length; i++) {
+                    JPanel apptPanel = new JPanel();
+                    apptPanel.setMinimumSize(new Dimension(200, 20));
+                    apptPanel.setPreferredSize(new Dimension(200, 50));
+                    apptPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                    String str = "<html>Dr. " + appts[i].getDoctor() + " - " + appts[i].getDate() + ", " + appts[i].getTime() + "<br>" + appts[i].getReason() + "</html>";
+                    apptPanel.add(new JLabel(str));
+                    innerPanel.add(apptPanel);
                 }
+
+                appointmentPane.setViewportView(innerPanel);
             }
         } catch (Exception e) {
             e.printStackTrace();

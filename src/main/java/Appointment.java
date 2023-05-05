@@ -96,12 +96,14 @@ public class Appointment extends JPanel {
             reader.close();
 
             // handle response
+            System.out.println("create appointment response: " + response);
             if(response.equals(null)) {
                 System.out.println("failed");
+                // todo - add failed label
             } else {
                 app.showDashboard();
             }
-            System.out.println("create appointment response: " + response);
+
             return response;
         } catch (Exception e) {
             e.printStackTrace();

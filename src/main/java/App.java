@@ -45,8 +45,8 @@ public class App {
         frame.setVisible(true);
     }
 
-    public void showLogin() { cardLayout.show(contentPane, "login"); }
-    public void showDashboard() { cardLayout.show(contentPane, "dashboard"); ((Dashboard)dashboardPanel).queryAppointments(this);  }
+    public void showLogin() { setUsername(null); setUserID(0); cardLayout.show(contentPane, "login"); }
+    public void showDashboard() { ((Dashboard)dashboardPanel).queryAppointments(this); dashboardPanel.repaint(); cardLayout.show(contentPane, "dashboard"); }
     public void showCreateAccount() { cardLayout.show(contentPane, "createAccount"); }
     public void showCreateAppointment() { cardLayout.show(contentPane, "createAppointment"); }
 
@@ -56,13 +56,13 @@ public class App {
     public int getUserID() { return userID; }
     public static void main(String[] args) {
         App app = new App();
-        //app.showLogin(); //default login
+        app.showLogin(); //default login
 
         //testing
-        /*
+/*
         app.setUsername("test");
         app.setUserID(11);
         app.showCreateAppointment();
-         */
+ */
     }
 }
