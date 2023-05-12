@@ -101,11 +101,14 @@ public class Login {
                 usernameField.setText("");
                 passwordField.setText("");
             } else {
+                /*
                 int comma = response.indexOf(", ");
                 if (comma != -1) {
                     String num = response.substring(comma + 2);
                     app.setUserID(Integer.parseInt(num));
                 }
+                 */
+                app.setUserID(Integer.parseInt(response));
                 app.setUsername(username);
 
                 usernameField.setText("");

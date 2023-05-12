@@ -10,8 +10,13 @@ import java.net.URL;
 
 public class Dashboard extends JPanel {
     private JScrollPane appointmentPane;
+    private JPanel innerPanel;
+    private JLabel none;
+
     public Dashboard(App app) {
         setLayout(new BorderLayout());
+        this.innerPanel = new JPanel();
+
 
         JPanel contentPane = new JPanel();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
@@ -49,6 +54,8 @@ public class Dashboard extends JPanel {
         rightPanel.add(logoutBtn);
 
         logoutBtn.addActionListener(e -> {
+            innerPanel.removeAll();
+            appointmentPane.setViewportView(none);
             app.showLogin();
         });
 
@@ -61,6 +68,7 @@ public class Dashboard extends JPanel {
     }
 
     public void queryAppointments(App app) {
+        System.out.println("query id: " + app.getUserID());
         try {
             // Set up the POST request
             URL url = new URL("http://155.248.226.28/getAppointment.php");
@@ -70,7 +78,7 @@ public class Dashboard extends JPanel {
 
             // query based on user id
             OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-            writer.write("userID=" + app.getUserID() );
+            writer.write("userID=" + app.getUserID());
             writer.flush();
 
             // Read the response from the server
@@ -81,9 +89,11 @@ public class Dashboard extends JPanel {
             // Print the response
             System.out.println("dashboard: " + response);
 
-            if(response.equals("Failed")) {
+            if (response.equals("Failed")) {
                 JLabel none = new JLabel("No upcoming appointments");
-                appointmentPane.add(none);
+                JPanel innerPanel = new JPanel();
+                innerPanel.add(none);
+                appointmentPane.setViewportView(innerPanel);
             } else { // loop appointments and add to appointment pane
                 Gson gson = new Gson();
                 Appt[] appts = gson.fromJson(response, Appt[].class);
@@ -108,4 +118,3 @@ public class Dashboard extends JPanel {
         }
     }
 }
-

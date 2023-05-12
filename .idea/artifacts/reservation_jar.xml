@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="reservation:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/reservation_jar</output-path>
+    <root id="archive" name="reservation.jar">
+      <element id="module-output" name="reservation" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/lgooddatepicker/LGoodDatePicker/11.2.1/LGoodDatePicker-11.2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

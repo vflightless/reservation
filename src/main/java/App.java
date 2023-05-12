@@ -58,8 +58,9 @@ public class App {
         App app = new App();
         app.showLogin(); //default login
 
-        //testing
+
 /*
+        //testing
         app.setUsername("test");
         app.setUserID(11);
         app.showCreateAppointment();
