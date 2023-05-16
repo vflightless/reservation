@@ -17,7 +17,6 @@ public class Dashboard extends JPanel {
         setLayout(new BorderLayout());
         this.innerPanel = new JPanel();
 
-
         JPanel contentPane = new JPanel();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 
@@ -25,17 +24,12 @@ public class Dashboard extends JPanel {
         JLabel appointmentLabel = new JLabel("Appointments");
         appointmentPane = new JScrollPane();
         JButton createAppointment = new JButton("Create Appointment");
-
-        //create listener
-        createAppointment.addActionListener(e -> {
-            app.showCreateAppointment();
-        });
+        createAppointment.addActionListener(e -> { app.showCreateAppointment(); });
 
         contentPane.add(appointmentLabel);
         contentPane.add(appointmentPane);
         contentPane.add(createAppointment);
 
-        // Add the GridBagLayout panel to the center of the BorderLayout
         add(addToolbar(app), BorderLayout.NORTH);
         add(contentPane, BorderLayout.CENTER);
     }
@@ -68,9 +62,7 @@ public class Dashboard extends JPanel {
     }
 
     public void queryAppointments(App app) {
-        System.out.println("query id: " + app.getUserID());
         try {
-            // Set up the POST request
             URL url = new URL("http://155.248.226.28/getAppointment.php");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
@@ -81,14 +73,11 @@ public class Dashboard extends JPanel {
             writer.write("userID=" + app.getUserID());
             writer.flush();
 
-            // Read the response from the server
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String response = reader.readLine();
             reader.close();
 
-            // Print the response
             System.out.println("dashboard: " + response);
-
             if (response.equals("Failed")) {
                 JLabel none = new JLabel("No upcoming appointments");
                 JPanel innerPanel = new JPanel();

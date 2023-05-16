@@ -10,7 +10,6 @@ public class App {
     private JPanel dashboardPanel;
     private JPanel createAccountPanel;
     private JPanel createAppointmentPanel;
-
     private String username;
     private int userID;
 
@@ -24,7 +23,6 @@ public class App {
         contentPane = new JPanel();
         cardLayout = new CardLayout();
         contentPane.setLayout(cardLayout);
-
 
         loginPanel = Login.newLogin(this);
         dashboardPanel = new Dashboard(this);
@@ -49,7 +47,6 @@ public class App {
     public void showDashboard() { ((Dashboard)dashboardPanel).queryAppointments(this); dashboardPanel.repaint(); cardLayout.show(contentPane, "dashboard"); }
     public void showCreateAccount() { cardLayout.show(contentPane, "createAccount"); }
     public void showCreateAppointment() { cardLayout.show(contentPane, "createAppointment"); }
-
     public void setUsername(String u) { username = u; }
     public String getUsername() { return username; }
     public void setUserID(int id) { userID = id; }
@@ -57,13 +54,5 @@ public class App {
     public static void main(String[] args) {
         App app = new App();
         app.showLogin(); //default login
-
-
-/*
-        //testing
-        app.setUsername("test");
-        app.setUserID(11);
-        app.showCreateAppointment();
- */
     }
 }

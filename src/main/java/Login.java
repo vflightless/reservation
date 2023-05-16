@@ -43,12 +43,8 @@ public class Login {
 
 
         // Listeners
-        loginBtn.addActionListener(e -> {
-            Login.queryLogin(app, usernameField, passwordField, errorLabel);
-        });
-        createBtn.addActionListener(e -> {
-            app.showCreateAccount();
-        });
+        loginBtn.addActionListener(e -> Login.queryLogin(app, usernameField, passwordField, errorLabel));
+        createBtn.addActionListener(e -> app.showCreateAccount());
 
         // Layout Manager
         container.setLayout(new GridBagLayout());
@@ -76,25 +72,20 @@ public class Login {
         System.out.println("Login: " + username + ", " + password);
 
         try {
-            // Set up the POST request
             URL url = new URL("http://155.248.226.28/login.php");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
 
-            // Send the username and password in the request body
             OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
             writer.write("username=" + username + "&password=" + password);
             writer.flush();
 
-            // Read the response from the server
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String response = reader.readLine();
             reader.close();
 
-            // Handle Response
             System.out.println("Login: " + response);
-
             if(response.equals("Failed")) {
                 errorLabel.setText("Invalid username or password.");
                 errorLabel.setVisible(true);

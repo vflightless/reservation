@@ -1,28 +1,22 @@
 import com.github.lgooddatepicker.components.DatePicker;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 public class Appointment extends JPanel {
-    private JLabel doctorLabel;
-    private JLabel dateLabel;
-    private JLabel timeLabel;
-    private JLabel reasonLabel;
     private JLabel failLabel;
     private JComboBox<String> doctorPicker;
     private DatePicker datePicker;
     private JComboBox<String> timePicker;
     private JTextArea reasonField;
-    private JButton createAppointmentButton;
+
     public Appointment(App app) {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -34,7 +28,7 @@ public class Appointment extends JPanel {
         add(newAppointment, gbc);
 
         gbc.gridy++;
-        doctorLabel = new JLabel("Choose Doctor:");
+        JLabel doctorLabel = new JLabel("Choose Doctor:");
         add(doctorLabel, gbc);
         String[] doctors = queryDoctors();
         doctorPicker = new JComboBox<String>(doctors);
@@ -43,15 +37,16 @@ public class Appointment extends JPanel {
 
         gbc.gridx = 0;
         gbc.gridy++;
-        dateLabel = new JLabel("Choose Date:");
+        JLabel dateLabel = new JLabel("Choose Date:");
         add(dateLabel, gbc);
         datePicker = new DatePicker();
+        datePicker.setDateToToday();
         gbc.gridx++;
         add(datePicker, gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;
-        timeLabel = new JLabel("Select Time:");
+        JLabel timeLabel = new JLabel("Select Time:");
         add(timeLabel, gbc);
         String[] times = {"9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM"};
         timePicker = new JComboBox<>(times);
@@ -60,7 +55,7 @@ public class Appointment extends JPanel {
 
         gbc.gridx = 0;
         gbc.gridy++;
-        reasonLabel = new JLabel("Enter Reason:");
+        JLabel reasonLabel = new JLabel("Enter Reason:");
         add(reasonLabel, gbc);
         reasonField = new JTextArea(5, 20);
         gbc.gridx++;
@@ -68,11 +63,22 @@ public class Appointment extends JPanel {
 
         gbc.gridx = 0;
         gbc.gridy++;
-        createAppointmentButton = new JButton("Submit");
+        JButton createAppointmentButton = new JButton("Submit");
         createAppointmentButton.addActionListener(e -> {
             String result = queryCreateAppointment(app, doctorPicker, datePicker, timePicker, reasonField.getText());
         });
         add(createAppointmentButton, gbc);
+
+        gbc.gridx++;
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> {
+            doctorPicker.setSelectedIndex(-1);
+            timePicker.setSelectedIndex(-1);
+            datePicker.setDateToToday();
+            reasonField.setText("");
+            app.showDashboard();
+        });
+        add(backButton, gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;
@@ -85,9 +91,7 @@ public class Appointment extends JPanel {
         String doc = (String) doctor.getSelectedItem();
         String d = date.getDateStringOrEmptyString();
         String t = (String) time.getSelectedItem();
-        String r = reasonField.getText();
         try {
-            // Set up the POST request
             URL url = new URL("http://155.248.226.28/createAppointment.php");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
@@ -98,16 +102,12 @@ public class Appointment extends JPanel {
             writer.write("userID=" + app.getUserID() + "&name=" + app.getUsername() + "&doctor=" + doc + "&date=" + d + "&time=" + t + "&reason=" + reason);
             writer.flush();
 
-            // Read the response from the server
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String response = reader.readLine();
             reader.close();
 
-            // handle response
             System.out.println("create appointment response: " + response);
             if(response.equals("Failed")) {
-                System.out.println("failed");
-                // todo - add failed label
                 failLabel.setVisible(true);
             } else {
                 failLabel.setVisible(false);
@@ -122,13 +122,11 @@ public class Appointment extends JPanel {
     }
     public String[] queryDoctors() {
         try {
-            // Set up the POST request
             URL url = new URL("http://155.248.226.28/getDoctors.php");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
 
-            // Read the response from the server
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String response = reader.readLine();
             reader.close();
