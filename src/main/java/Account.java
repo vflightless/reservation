@@ -57,7 +57,17 @@ public class Account extends JPanel {
         gbc.gridx = 0;
         gbc.gridy++;
         JButton createButton = new JButton("Submit");
-        createButton.addActionListener(e -> queryAccount(app, nameField, emailField, passwordField, regCodeField));
+        createButton.addActionListener(e -> {
+            String name = nameField.getText();
+            String email = emailField.getText();
+            String password = new String(passwordField.getPassword());
+
+            if (validateFields(name, email, password)) {
+                queryAccount(app, nameField, emailField, passwordField, regCodeField);
+            } else {
+                JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
         add(createButton, gbc);
     }
     public void queryAccount(App app, JTextField name, JTextField email, JPasswordField password, JTextField code) {
@@ -87,5 +97,7 @@ public class Account extends JPanel {
             e.printStackTrace();
         }
     }
-
+    private boolean validateFields(String name, String email, String password) {
+        return !name.isEmpty() && !email.isEmpty() && !password.isEmpty();
+    }
 }

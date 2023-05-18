@@ -66,6 +66,10 @@ public class Appointment extends JPanel {
         JButton createAppointmentButton = new JButton("Submit");
         createAppointmentButton.addActionListener(e -> {
             String result = queryCreateAppointment(app, doctorPicker, datePicker, timePicker, reasonField.getText());
+            doctorPicker.setSelectedIndex(-1);
+            timePicker.setSelectedIndex(-1);
+            datePicker.setDateToToday();
+            reasonField.setText("");
         });
         add(createAppointmentButton, gbc);
 
@@ -108,7 +112,8 @@ public class Appointment extends JPanel {
 
             System.out.println("create appointment response: " + response);
             if(response.equals("Failed")) {
-                failLabel.setVisible(true);
+                //failLabel.setVisible(true);
+                JOptionPane.showMessageDialog(this, "Time/Date already taken. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 failLabel.setVisible(false);
                 app.showDashboard();
